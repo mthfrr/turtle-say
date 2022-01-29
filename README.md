@@ -24,4 +24,4 @@ Image generation:
 
 # Examples
 
-![example/hello.png]
+![hello world](example/hello.png)
