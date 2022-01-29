@@ -23,7 +23,7 @@ def turtle_say(text: str, size: float = 300, padl: float = .05, padm: float = .4
 
     # loading turtle
     base_img = svgwrite.image.Image(
-        "file://" + os.getcwd() + "/base/turtle.svg", insert=(0, 0), size=(SIZE, SIZE))
+        os.getcwd() + "/base/turtle.svg", insert=(0, 0), size=(SIZE, SIZE))
     base_img.translate(0, IMG_INSERT)
     base_img.scale(IMG_SCALE)
     dwg.add(base_img)
