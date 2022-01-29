@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
+from bisect import bisect_left
+from numpy import average
 import svgwrite
-from cairosvg import svg2png
 import logging
-
 
 def textsize(text: str, fontsize: float = 14, font: str = "Arial"):
     try:
@@ -16,7 +16,9 @@ def textsize(text: str, fontsize: float = 14, font: str = "Arial"):
     cr.set_font_size(fontsize)
     xbearing, ybearing, width, height, xadvance, yadvance = cr.text_extents(
         text)
-    
+        
+    #print(f"size({fontsize}): {xbearing} {ybearing}, {width}, {height}, {xadvance}, {yadvance}")
+    return xadvance+xbearing, height
     return width, height
 
 
@@ -98,8 +100,8 @@ class paragraphe():
         return res
 
 class myCenteringGroup(svgwrite.container.Group):
-    def __init__(self, height: int) -> None:
-        super().__init__()
+    def __init__(self, height: int, f) -> None:
+        super().__init__(filter=f)
         self.height = height
         
     def center(self, total_height: int):
@@ -116,3 +118,70 @@ def textBuilder(text: str, width: int, size: float = 30, inter_ratio: float = .3
             logging.debug(f"reduce font size: {size}->{size - 1}")
             size -= 1
         raise Exception("Unable to make text fit")
+
+class TextSizeCalc:
+    def __init__(self, text: str, font: str):
+        self.text = text
+        self.font = font
+
+    def __getitem__(self, key: float):
+        return textsize(self.text, key/10.0, self.font)[0]
+
+
+
+class Line:
+    def __init__(self, text: str, size: int, width: int, font: str, pad: tuple[float, float, float]):
+        self.text = text
+        self.w = width
+        self.font = font
+        self.pad= pad
+        #print(f"Target {width}")
+        self.size = bisect_left(TextSizeCalc(text, font), self.w, lo=0, hi=size*10) / 10.0
+
+    def width(self) -> float:
+        return textsize(str(self), self.size, self.font)[0]
+
+    def height(self) -> float:
+        return textsize(str(self), self.size, self.font)[1]
+
+    def hnorm(self) -> float:
+        return textsize("|0)", self.size, self.font)[1]
+    
+    def __str__(self):
+        return self.text
+
+    def __repr__(self):
+        return f"{self.text}:{self.size}->{self.width()}"
+
+
+def textBuilder2(text: str, width: int, size: float, pad: tuple[float, float, float], font: str = "Arial", f=None):
+    lpad = int(pad[0] * width)
+    rpad = int(pad[2] * width)
+    width = width - lpad - rpad    
+    #print(f"{lpad}|{width}|{rpad} ({pad})")
+
+    lines = list(Line(x, size, width, font, pad) for x in text.split("//"))
+
+    hpad = average([x.hnorm() for x in lines])*pad[1]/2
+    #print(lines)
+    yoffset = 0
+    res = myCenteringGroup(sum(x.height() + 2 * hpad for x in lines) + pad[1], f.get_funciri())
+
+    for l in lines:
+        yoffset += hpad
+        yoffset += l.height()
+        
+        txt = svgwrite.text.Text(
+            l,
+            insert=(lpad + (width - l.width()) / 2, yoffset),
+            stroke='none',
+            fill="#fff",
+            font_size=l.size,
+            font_weight="bold",
+            font_family=font)
+        res.add(txt)
+
+        #res.add(svgwrite.shapes.Rect(insert=(lpad, yoffset), size=(l.width(),1), fill="#f00"))
+
+        yoffset += hpad
+    return res

@@ -1,5 +1,5 @@
-<svg width="128" height="128" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <g>
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g transform="scale(4)">
     <path d="M40.1,37.83c0,0,2.55-1.48,3.98-2.12l22.24,8.18l35.97,0.97c0,0,2.7,2.8,3.5,3.76l6.53,18.74 l5.27,2.11c0,0,1.21,3.62,1.55,4.99l-1.09,8.64L65.91,96.03L24.04,85.76l0.13-25.74l12.8-16.67L40.1,37.83z" style="fill:#2F2F2F;"/>
     <g>
       <g>
