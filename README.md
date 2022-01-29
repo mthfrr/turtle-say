@@ -19,7 +19,7 @@ Image generation:
 - svgwrite (pip)
 - numpy (pip)
 
-- ImageMagik (`convert` command)
+- imagemagick (`convert` command)
 
 
 # Examples
