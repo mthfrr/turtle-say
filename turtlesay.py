@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 
 import subprocess
-from datetime import datetime
-from io import BytesIO, FileIO
+from io import BytesIO
 import svgwrite
 import logging
 import svgtextbox
-from wand.color import Color
-from wand.image import Image
 import os
 
 
@@ -87,4 +84,4 @@ def turtle_say(text: str, size: float = 300, padl: float = .05, padm: float = .4
 
 
 if __name__ == "__main__":
-    turtle_say("NICE//NICE", size=75)
+    turtle_say("HELLO//WORLD", size=75)

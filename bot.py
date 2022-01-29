@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-from distutils.command.clean import clean
 from http import client
-from operator import ne
 import discord
 from datetime import datetime
 import shlex
