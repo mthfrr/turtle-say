@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from datetime import datetime
 from io import BytesIO
 import svgwrite
 from cairosvg import svg2png
@@ -28,12 +29,20 @@ def turtle_say(text, size=75, interline_ratio=0.5, side_pad=10) -> BytesIO:
     dwg.add(base_img)
 
     rect = svgwrite.shapes.Rect(txt_box_insert, txt_box_size)
-    dwg.add(rect)
+    # dwg.add(rect)
     
     txt = svgtextbox.textBuilder(text, txt_box_size[0] - side_pad, size, interline_ratio, font="James Tan Dinawanao")
     txt.center(txt_box_size[1])
     txt.translate(txt_box_insert[0] + side_pad, txt_box_insert[1])
-    dwg.add(txt)
+
+    txtgroup = svgwrite.container.Group()
+    txtgroup.add(rect)
+    txtgroup.add(txt)
+    txtgroup.skewX(2)
+    txtgroup.skewY(2)
+    txtgroup.translate(-30, 0)
+
+    dwg.add(txtgroup)
 
     # export as image
     svg_code = dwg.tostring()
@@ -41,8 +50,16 @@ def turtle_say(text, size=75, interline_ratio=0.5, side_pad=10) -> BytesIO:
     out = svg2png(bytestring=svg_code, write_to=None)
     with open("output.png", "wb") as f:
         f.write(out)
-    return out
+    return BytesIO(out)
 
 
 if __name__ == "__main__":
     turtle_say("OUI OUI ALLER")
+    turtle_say("TA GUEULE", 60, side_pad=20)
+    #turtle_say("NON", 140)
+    #turtle_say("Ok ...", 140)
+    turtle_say("Ok", 250, side_pad=25)
+    turtle_say("SAY", 170, side_pad=23)
+    turtle_say(str(datetime.now().strftime("%m/%d/%Y %H:%M:%S")), 65)
+    #turtle_say("RTFM", 130)
+    turtle_say("OK MAIS TA GUEULE", 67, side_pad=18)
