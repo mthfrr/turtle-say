@@ -1,4 +1,2 @@
 discord.py
-jinja2
-cairosvg
-cairo
+svgwrite

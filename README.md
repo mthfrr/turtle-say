@@ -21,7 +21,6 @@ Image generation:
 
 - imagemagick (`convert` command)
 
-
 # Examples
 
 ![hello world](example/hello.png)
